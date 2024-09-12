@@ -18,6 +18,14 @@ matriz_eventos_desordenada=[
 #Ordenamiento de matriz con criterio, alfabeticamente por artista/nombre
 matriz_eventos = sorted(matriz_eventos_desordenada,key=lambda x: (x[2]))
 
+
+def validar(entrada):
+    if re.match(r"^-?\d+$",entrada):
+        return 1
+    else:
+        return 0
+
+
 def comprar(elegir1):#Ultimo paso, en el cual se efectua la confirmacion de las entradas y se elije la ubicacion en el evento
 
     """Entrada: Se recibe el evento al cual el usuario desea asistir
@@ -26,53 +34,70 @@ def comprar(elegir1):#Ultimo paso, en el cual se efectua la confirmacion de las 
 
     band=0
     i=0
-    if elegir1 > 0:    
-        cont=0
-        filas=len(matriz_eventos)
-        print('-' * 100)
-        print(" "*3,f"{'UBICACION Y PRECIO':<10}")
-        print('-' * 100)
-        for i in range(filas):
-                if matriz_eventos[i][0] == lista_id[elegir1-1]:
-                    columnas=len(matriz_eventos[i])
-                    b=i
-                    for j in range(5,columnas):
-                            cont=cont+1
-                            print(cont,")",matriz_eventos[i][j])
-    band=0
-    elegir2=interfaz()
     while band==0:
-        if elegir2 <=cont:
+        if elegir1 > 0:    
+            cont=0
+            filas=len(matriz_eventos)
+            print('-' * 100)
+            print(" "*3,f"{'UBICACION Y PRECIO':<10}")
+            print('-' * 100)
+            for i in range(filas):
+                    if matriz_eventos[i][0] == lista_id[elegir1-1]:
+                        columnas=len(matriz_eventos[i])
+                        b=i
+                        for j in range(5,columnas):
+                                cont=cont+1
+                                print(cont,")",matriz_eventos[i][j])
+   
+    
+
+        elegir2=interfaz()
+        if elegir2 <=cont and elegir2 > 0:
             band=1
-            elegir3=int(input("Cuantas entradas desea comprar? "))
-            print("Usted ha comprado",elegir3,"entradas en la ubicacion",matriz_eventos[b][4+elegir2][:7],".")
+            elegir3=input("Cuantas entradas desea comprar? ")
+            if validar(elegir3)==1:
+                print("Usted ha comwprado",elegir3,"entradas en la ubicacion",matriz_eventos[b][4+elegir2][:7],".")
+            else:
+                print("opcion incorrecta")
+                band=0        
         else:
             print("Ubicacion no encontrada")
     
-    interfaz()
+    band=0
+    while band==0:
+        fin=interfaz()
+        if fin==-1 or fin==0:
+            band=1
+        if band==0:
+            print("ERROR")
 
 
 def inicio():#se desplieaga un menu para seleccionar los distintos tips de eventos
     
     """Comienza el codigo
-    Sale: Una eleccion que deriva a la fauncion de eventos,
+    Sale: Una eleccion que deriva a la funcion de eventos,
     y se repite en bucle hasta no conseguir una repuesta correcta """
 
     band=0
-    print("Tipos de eventos: ")
-    print("-"*100)
-    print('1)Música')
-    print('2)Familia')
-    print('3)Teatro')
-    print('4)Deporte')
-    print("-"*100)
     while band==0:
-        elegir=int(input("Seleccione una opción: "))
-        if elegir <= 4 and elegir >0:
-            eventos(elegir)
-            band=1
+        print("Tipos de eventos: ")
+        print("-"*100)
+        print('1)Música')
+        print('2)Familia')
+        print('3)Teatro')
+        print('4)Deporte')
+        print("-"*100)    
+        elegir=input("Seleccione una opción: ")
+        if validar(elegir)==1:
+            elegir=int(elegir)
+            if elegir <= 4 and elegir >0:
+                eventos(elegir)
+                band=1
+            else:
+                print("Opción no encontrada")
         else:
             print("Opción no encontrada")
+
 
 def interfaz():# Interfaz que se despliega luego de cada eleccion del cliente
 
@@ -86,16 +111,23 @@ def interfaz():# Interfaz que se despliega luego de cada eleccion del cliente
         print('-' * 100)
         print('0)Inicio'.center(10,' '),'-1)Salir'.center(10,' '))
         print('-' * 100)
-        elegir1=int(input("Seleccione una opción: "))
-        if elegir1 == 0:
+        elegir1=input("Seleccione una opción: ")
+        if validar(elegir1)==1:
+            elegir1=int(elegir1)
+            if elegir1 == 0:
+                band=1
+                inicio()
+            if elegir1 == -1:
+                band=1
+                print("Adios")
             band=1
-            inicio()
-        if elegir1 == -1:
-            band=1
-            print("Adios")
-        band=1
+
+            return elegir1
+        else:
+            return -2
+
     
-    return elegir1
+
 
 
 def eventos(elegir):#Se muestran los eventos filtrados segun lo seleccionado por el usuario
