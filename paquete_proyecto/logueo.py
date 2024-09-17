@@ -34,8 +34,11 @@ def registro():
         print("-No puede contener caracteres especiales como @, #, etc., excepto el guion bajo")
         usuario = input("Ingrese su usuario: ")
         if validaciones.validar_usuario(usuario)==1:
-            print("Usuario valido")
-            bandera=1
+            if variaciones.validar_usuario(usuario)==0:
+                print("Usuario valido")
+                bandera=1
+            else:
+                print("Usuario en uso, ingrese otro.")
         else:
             print("Usuario invalido, ingreselo nuevamente.")
 
@@ -85,7 +88,13 @@ def logueo():
                 flag=1
             else:
                 flag =0
-                print("Contraseña incorrecta")    
+                print("Contraseña incorrecta")
+                
+    if variaciones.tipo_de_usuario(usuario_logueo)==1:
+        return 1
+    else:
+        return 0
+
 
 def inicio_logueo():
     f=0
@@ -102,18 +111,25 @@ def inicio_logueo():
                 if seleccion == 1:
                     registro()
                     f=1
+                    return seleccion,0
 
                 elif seleccion == 2:
-                    logueo()
-                    print("Sesion iniciada")
                     f=1
+                    tipo_de_usuario=logueo()
+                    if tipo_de_usuario==0:
+                        print("Sesion iniciada")
+                        return seleccion, 0
+                    
+                    if tipo_de_usuario==1:
+                        print("Sesion iniciada como gestor")
+                    
+                        return seleccion, 1
                     
                 elif seleccion == 3:
                     f = 1  # Termina el bucle principal
                     print("Fin de la operacion")
 
-                return seleccion
+                    return seleccion, 0
 
         if f==0:
             print("Opcion no encontrada")
-    
