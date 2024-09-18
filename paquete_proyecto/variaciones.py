@@ -1,30 +1,37 @@
 import validaciones
 #lista con los tipos de eventos, luego utilizada para filtrar la matriz
-lista_tipo=['musica','familia','teatro','deporte']
+lista_tipo=['MUSICA','FAMILIA','TEATRO','DEPORTE']
 
+#lista donde se guardan los ids de los eventos elegidos para luego poder manipular con el evento con mayor facilidad
 lista_id=[]
 
-lista_agregar=[]
-
 #matriz con todos los datos de eventos necesarios
-matriz_eventos_desordenada=[
-[1001,"musica","Milo J","Estadio de Morón","25 de octubre, 21hs","Platea  $35000","Campo  $28000",],
-[1002,"familia","Plim Plim","Quality espacio","5 de octubre, 17.30hs","Campo delantero  $17000","Campo trasero  $11000"],
-[1003,"deporte","Argentina vs Bolivia","Más Monumental","15 de Octubre, 21hs","Platea  $120000","Popular  $75000","Palco  $500000"],
-[1004,"musica","Buenos Aires Trap","Parque de la Ciudad","7 y 8 de Diciembre","Abono por un dia  $50000","Abono general  $85000"]]
+matriz_eventos_desordenada=[[1001,"MUSICA","MILO J","ESTADIO DE MORÓN","25 DE OCTUBRE, 21 HS","PLATEA  $35000","CAMPO  $28000",],
+[1002,"FAMILIA","PLIM PLIM","QUALITY ESPACIO","5 DE OCTUBRE, 17.30HS","CAMPO DELANTERO  $17000","CAMPO TRASERO  $11000"],
+[1003,"DEPORTE","AREGTINA VS BOLIVIA","MAS MONUMENTAL","15 DE OCTUBRE, 21HS","PLATEA  $120000","POPULAR  $75000","PALCO  $500000"],
+[1004,"MUSICA","BUENOS AIRES TRAP","PARQUE DE LA CIUDAD","7 Y 8 DE DICIEMBRE","ABONO POR UN DIA $50000","ABONO GENERAL  $85000"]]
 
+#lista donde se guarda las ubicaciones que el usuario elige previo a la compra
 ubicaciones=[]
-datos_usuario = [["maestro","maestro@email.com", "maestro77", "123456",1111111 ,1000, "maestro"]]
 
+#matriz con todos datos de cada usuario registrado
+datos_usuario = [["maestro","maestro@mail.com", "maestro77", "123456",1111111 ,1000, "MAESTRO"]]
+
+#matriz con todos los datos de cada compra ralizada
 historial=[]
+
+#lista con los datos necesarios que luego seran agregados a la matriz historial
 lista_historial=[0]*6
 
 #Ordenamiento de matriz con criterio, alfabeticamente por artista/nombre
-
 matriz_eventos = sorted(matriz_eventos_desordenada,key=lambda x: (x[2]))
 
 
 def filtrar_matriz(elegir,a):
+
+    """Entrada: recibe por teclado una eleccion
+    Salida: se filtra e imprime la matriz segun lo elegido"""
+
     if elegir > 0:
         ubicaciones.clear()
         
@@ -52,24 +59,39 @@ def filtrar_matriz(elegir,a):
             
             return len(filtrados)
 
+
 def agregar_usuarios(nombre,mail,usuario,contraseña,dni):
+    
+    """Entrada: se recibe todos los datos del usuario registrado
+    Salida: esos datos que ingresan a la funcion son guardados a la matriz de usuarios"""
+
     id=len(datos_usuario)+1000
-    datos_usuario.append([nombre,mail,usuario,contraseña,dni,id,'usuario'])
+    datos_usuario.append([nombre,mail,usuario,contraseña,dni,id,'USUARIO'])
+
 
 def validar_usuario(usuario):
+
+    """Entrada: Se recibe el usuario que se desea buscar 
+    Salida: se busca y se devuelve si el usuario se encuentra en la matriz"""
+    
     band=0
     for i in range (len(datos_usuario)):
         if datos_usuario[i][2] == usuario:
             band=1
-            lista_historial[1]=datos_usuario[i][2]
-            lista_historial[0]=datos_usuario[i][5]
+            lista_historial[1]=datos_usuario[i][2]#se guarda en la lista_historial el usuario
+            lista_historial[0]=datos_usuario[i][5]#se guarda en lista_historia el id
             
     if band==0:
         return 0
     else:
         return 1
 
+
 def validar_contraseña(contraseña):
+
+    """Entrada: Se recibe la contraseña que se desea buscar 
+    Salida: se busca y se devuelve si la contraseña se encuentra en la matriz"""
+
     band=0
     for i in range (len(datos_usuario)):
         if datos_usuario[i][3] == contraseña:
@@ -79,7 +101,13 @@ def validar_contraseña(contraseña):
     else:
         return 1        
 
-def agregar_historial(ubicacion,cantidad):
+
+def agregar_historial(cantidad,ubicacion):
+
+    """Entrada: se recibe la ubicacion y cantidad de entradas
+    Salida: se agregan a la lista los datos ingresado y con la lista ya completa,
+    la misma se agrega como fila en la matriz historial"""
+
     while len(lista_historial) < 6:
         lista_historial.append(None)
     
@@ -90,19 +118,20 @@ def agregar_historial(ubicacion,cantidad):
     # Agrega una copia de lista_historial a historial para evitar modificar referencias
     historial.append(lista_historial.copy())
     
-    # Imprime para depuración
-    print(lista_historial, historial)
 
-
+#Se encarga de impprimir de manera ordenada y prolija la matriz historial
 def imprimir_historial():
-    print(f"{'ID':<12}{'Usuario':<20}{'ID Evento':<12}{'Evento':<20}{'Ubicacion':<15}{'Cantidad entradas compradas':<10}")
-    print('-'*100)
-    for id_usuario,usuario,id_evento,evento,ubicacion,cantidad in historial:
-        print(f"{id_usuario:<12}{usuario:<20}{id_evento:<12}{evento:<20}{ubicacion:<15}{cantidad:<10}")
 
+    print(f"{'ID USUARIO':<15}{'USUARIO':<20}{'ID EVENTO':<15}{'EVENTO':<25}{'UBICACIÓN':<30}{'CANTIDAD ENTRADAS COMPRADAS':<10}")
+    print('-'*175)
+    for id_usuario,usuario,id_evento,evento,ubicacion,cantidad in historial:
+        print(f"{id_usuario:<15}{usuario:<20}{id_evento:<15}{evento:<25}{ubicacion:<30}{cantidad:<10}")
+
+
+#Se encarga de imprimir de manera ordenada y prolija la matriz de eventos
 def imprimir_eventos():
     print('-' * 175)
-    print(" "*5, f"{'ID':<10}{'TIPO':<16} {'NOMBRE':22} {'UBICACION':<22} {'FECHA Y HORA':<26}{'ENTRADAS DISPONIBLES':<25}")
+    print(" "*5, f"{'ID':<10}{'TIPO':<16} {'NOMBRE':22} {'UBICACIÓN':<22} {'FECHA Y HORA':<26}{'ENTRADAS DISPONIBLES':<25}")
     print('-' * 175)
 
     for i in range(len(matriz_eventos)):
@@ -119,11 +148,13 @@ def imprimir_eventos():
             print(f"{str(matriz_eventos[i][j]):<27}",end="")
         print()
 
+
+#borra la fila que se ingrese por teclado y a su vez la muestra
 def borrar():
     band=0
     while band==0:
         imprimir_eventos()
-        eleccion=input("Cual es la fila que desea eliminar? ")
+        eleccion=input("Cuál es la fila que desea eliminar? ")
         if validaciones.validar(eleccion)==1:
             eleccion=int(eleccion)
             if eleccion <= len(matriz_eventos) and eleccion>0:
@@ -131,86 +162,95 @@ def borrar():
                 print("Usted ha eliminado:",eliminado)
                 band=1
         if band==0:
-            print("Opcion incorrecta")
+            print("Opción incorrecta.")
 
 
+#Se solicitan por teclado los datos necesarios para asi poder agregar un evento mas a la matriz de eventos
 def agregar():
     bandera = 0 # Bandera para controlar el bucle de validación del Nombre
     id=len(matriz_eventos)+1000
-    lista_agregar.append(id)
 
     while bandera == 0:
-        print("-"*50)
-        tipo = input("Ingrese el tipo de evento: ")
+        print("-"*175)
+        tipo = input("Ingrese el tipo de evento: ").upper()
         if validaciones.validar(tipo) == 0:
-            print("Válido")
-            lista_agregar.append(tipo)
+            print("Válido.")
             bandera = 1
         else:
-            print("Invalido, porfavor ingreselo nuevamente")
+            print("Inválido, porfavor ingréselo nuevamente.")
     
     bandera=0
     while bandera==0:
-        print("-"*50)
-        nombre = input("Ingrese el nombre del evento: ")
+        print("-"*175)
+        nombre = input("Ingrese el nombre del evento: ").upper()
         if validaciones.validar(nombre) == 0:
-            print("Valido")
-            lista_agregar.append(nombre)
+            print("Válido.")
             bandera=1
         else:
-            print("Invalido. Ingreselo nuevamente.")
+            print("Inválido. Ingréselo nuevamente.")
 
     bandera=0
     while bandera==0:
-        print("-"*50)
-        donde = input("Ingrese donde se realizara el evento: ")
+        print("-"*175)
+        donde = input("Ingrese donde se realizará el evento: ").upper()
         if validaciones.validar(donde)==0:
-            print("Valido")
-            lista_agregar.append(donde)
+            print("Válido.")
             bandera=1
 
         else:
-            print("Invalido, ingreselo nuevamente.")
+            print("Inválido, ingréselo nuevamente.")
 
     bandera=0
     while bandera==0:
-        print("-"*50)  
-        fecha_hora = input("Ingrese la fecha y horario del evento: ")
+        print("-"*175)  
+        fecha_hora = input("Ingrese la fecha y horario del evento: ").upper()
         if validaciones.validar(fecha_hora)==0:
-            print("Valido")
-            lista_agregar.append(fecha_hora)
+            print("Válido.")
             bandera=1
         else:
-            print("Invalido, ingresar nuevamente")
+            print("Inválido, ingresélo nuevamente.")
     
     bandera=0
     while bandera==0:
-        print("-"*50)
-        entradas= input("Ingresar las localidades disponibles y su precio(ingrese salir para finalizar): ").upper()
+        print("-"*175)
+        entradas= input("Ingrese las localidades disponibles y su precio: ").upper()
         if validaciones.validar(entradas)==0:
-                if entradas != 'SALIR':
-                    print("Valido")
-                    lista_agregar.append(entradas)
-                else:    
-                    bandera=1        
+            print("Válido.") 
+            bandera=1
         else:
-            print("Invalido, ingresar nuevamente")
-        
+            print("Inválido, ingréselo nuevamente.")
+    
+    
+    bandera=0
+    while bandera==0:
+        print("-"*175)
+        entradas2= input("Ingresar las localidades disponibles y su precio: ").upper()
+        if validaciones.validar(entradas2)==0:
+            print("Válido.")  
+            bandera=1
+        else:
+            print("Inválido, ingréselo nuevamente.")
         # Agregar los datos a la lista
-    matriz_eventos.append(lista_agregar)
-    print(matriz_eventos)
-    lista_agregar.clear()
+    matriz_eventos.append([id,tipo,nombre,donde,fecha_hora,entradas,entradas2])
+
+
 
 def tipo_de_usuario(usuario):
+
+    """Entrada:se recibe el usuario 
+    Salida: se verifica y devuelve el tipo de usuario que se logueo"""
+
     for i in range (len(datos_usuario)):
         if datos_usuario[i][2] == usuario:
-            if datos_usuario[i][6]=='maestro':
+            if datos_usuario[i][6]=='MAESTRO':
                 return 1
-            if datos_usuario[i][6]=='usuario':
+            if datos_usuario[i][6]=='USUARIO':
                 return 0
-            
+
+
+#Se encarga de imprimir de manera ordenada y prolija la matriz de usuarios
 def imprimir_usuarios():
     print( f"{'NOMBRE':<25}{'MAIL':<25} {'USUARIO':20} {'CONTRASEÑA':<20} {'DNI':<10}{'ID':<10}{'TIPO':<10}")
-    print('-'*100)
+    print('-'*175)
     for nombre,mail,usuario,contraseña,dni,id,tipo in datos_usuario:
         print( f"{nombre:<25}{mail:<25} {usuario:20} {contraseña:<20} {dni:<10}{id:<10}{tipo:<10}")

@@ -1,7 +1,7 @@
 import logueo
 import eventos
 import gestor
-def run():
+def main():
 
     volver_logueo=0
     while volver_logueo==0:#mientras volver_logreo sea 0 se va a volver al menu de logueo
@@ -11,10 +11,12 @@ def run():
 
             menu_eventos=0
             while menu_eventos==0:#mientras menu_eventos sea 0 se va a volver al menu de eventos
-                if tipo_usuario==0:
+                
+                if tipo_usuario==0:#se valida si es usuario 
                     seleccion=eventos.inicio()#se despliega menu de eventos
-                if tipo_usuario==1:
-                    seleccion=gestor.inicio()
+        
+                if tipo_usuario==1:#se valida si es gestor
+                    seleccion=gestor.inicio()# se despliega el menu de gestor
 
                 if seleccion==0:#cerrar sesion
                     volver_logueo=0
@@ -24,14 +26,14 @@ def run():
                     volver_logueo=1
                     menu_eventos=1
                 
-                if seleccion==5:
+                if seleccion==5:#se valida si se selecciona la opcion gestionar
                     menu_gestionar=0
                     while menu_gestionar==0:
-                        seleccionar=gestor.gestionar()
-                        if seleccionar==0:
+                        seleccionar=gestor.gestionar()# se despliegan las opciones para gestor
+                        if seleccionar==0:#volver al inicio
                             menu_eventos=0
                             menu_gestionar=1
-                        if seleccionar==-1:
+                        if seleccionar==-1:#salir definitivamente
                             volver_logueo=1
                             menu_eventos=1
                             menu_gestionar=1
@@ -83,7 +85,7 @@ def run():
                                         volver_logueo=1
                                     
                                     if mostrar_ubicaciones==0:
-                                        print("Ubicacion no encontrada")
+                                        print("Ubicación no encontrada")
 
                             if elegir_interfaz==0:#volver al menu de eventos
                                 menu_eventos=0
@@ -95,11 +97,11 @@ def run():
                                 volver_logueo=1
 
                             if mostrar_eventos == 0:
-                                print("ERROR,evento no encontrado")
+                                print("Error, evento no encontrado.")
 
         if eleccion==3:#salir dfinitivo
             volver_logueo=1
 
 
 if __name__=="__main__":
-    run()
+    main()
