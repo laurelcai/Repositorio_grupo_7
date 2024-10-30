@@ -1,0 +1,2 @@
+maestro;maestro@mail.com;maestro77;123456;1111111;1000;MAESTRO
+maestro;maestro@mail.com;maestro;123456;1111111;1001;USUARIO

@@ -1,5 +1,7 @@
 import validaciones
-import variaciones
+import crud_usuarios
+import gestor
+import eventos
 
 
 # Función para registrar un nuevo usuario
@@ -9,67 +11,94 @@ def registro():
     para poder hacer uso del mismo, y para ello debe completar una serie de peticiones.
     En esta funcion todas esas respuestas/datos son efectuadas y guardados en la matriz usuarios"""
 
-    bandera = 0 # Bandera para controlar el bucle de validación del Nombre
+    bandera_nombre= 0 # Bandera para controlar el bucle de validación del Nombre
+    while bandera_nombre == 0:
+        print("-"*175)
+        print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+        print("Ingrese su nombre completo:")
+        nombre = crud_usuarios.interfaz_logueo()
+        if nombre != None:
+            if validaciones.validar_nombre(nombre) == 1:
+                print("Nombre válido.")
+                bandera_nombre = 1
 
-    while bandera == 0:
-        print("-"*175)
-        nombre = input("Ingrese su nombre completo: ")
-        if validaciones.validar_nombre(nombre) == 1:
-            print("Nombre válido.")
-            bandera = 1
-        else:
-            print("Nombre inválido, por favor ingréselo nuevamente")
-    
-    bandera=0
-    while bandera==0:
-        print("-"*175)
-        email = input("Ingrese su email: ")
-        if validaciones.validar_email(email) == 1:
-            print("Correo válido.")
-            bandera=1
-        else:
-            print("Correo invalido, por favor ingréselo nuevamente.")
+                bandera_mail=0
+                while bandera_mail == 0:
+                    print("-"*175)
+                    print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+                    print("Ingrese su email: ")
+                    mail = crud_usuarios.interfaz_logueo()
+                    if mail != None:
+                        if validaciones.validar_email(mail) == 1:
+                            print("Correo válido.")
+                            bandera_mail = 1
 
-    bandera=0
-    while bandera==0:
-        print("-"*175)
-        print("-Puede contener letras (mayúsculas o minúsculas), números y guiones bajos.")
-        print("-Debe comenzar con una letra.")
-        print("-Puede tener entre 3 y 16 caracteres.")
-        print("-No puede contener caracteres especiales como @, #, etc., excepto el guion bajo.")
-        usuario = input("Ingrese su usuario: ")
-        if validaciones.validar_usuario(usuario)==1:
-            if variaciones.validar_usuario(usuario)==0:
-                print("Usuario válido.")
-                bandera=1
+                            bandera_usuario=0
+                            while bandera_usuario == 0:
+                                print("-"*175)
+                                print("-Puede contener letras (mayúsculas o minúsculas), números y guiones bajos.")
+                                print("-Debe comenzar con una letra.")
+                                print("-Puede tener entre 3 y 16 caracteres.")
+                                print("-No puede contener caracteres especiales como @, #, etc., excepto el guion bajo.")
+                                print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+                                print("Ingrese su usuario:")
+                                usuario = crud_usuarios.interfaz_logueo()
+                                if usuario != None:
+                                    if validaciones.validar_usuario(usuario)==1:
+                                        if crud_usuarios.validar_usuario(usuario)==0:
+                                            print("Usuario válido.")
+                                            bandera_usuario = 1
+
+                                            bandera_contraseña=0
+                                            while bandera_contraseña== 0:
+                                                print("-"*175)
+                                                print("Debe tener: entre 8 y 16 caracteres, al menos una letra mayúscula, al menos una letra minúscula y al menos un número.")    
+                                                print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+                                                print("Ingrese una contraseña:")
+                                                contraseña = crud_usuarios.interfaz_logueo()
+                                                if contraseña != None:
+                                                    if validaciones.validar_contraseña(contraseña)==1:
+                                                        print("Contraseña válida.")
+                                                        bandera_contraseña = 1
+                                                        
+                                                        bandera_dni=0
+                                                        while bandera_dni == 0:
+                                                            print("-"*175)    
+                                                            print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+                                                            print("Ingrese se DNI:")
+                                                            dni = crud_usuarios.interfaz_logueo()
+                                                            if dni != None:
+                                                                if validaciones.validar_dni(dni)==1:
+                                                                    print("DNI válido.")
+                                                                    bandera_dni = 1
+                                                                    crud_usuarios.agregar_usuarios(nombre,mail,usuario,contraseña,dni)
+                                                                    print("Usted se ha registrado correctamente.")
+                                                                    inicio_logueo()
+                                                                else:
+                                                                    print("DNI inválido, por favor ingréselo nuevamente")
+                                                            else:
+                                                                break
+
+                                                    else:
+                                                        print("Contraseña inválida, por favor ingrésela nuevamente")
+                                                else:
+                                                    break
+                                        else:
+                                            print("Usuario en uso, ingrese otro.")
+                                    else:
+                                        print("Usuario inválido, por favor ingréselo nuevamente")
+                                else:
+                                    break
+
+                        else:
+                            print("Correo inválido, por favor ingréselo nuevamente.")
+                    else:
+                        break
             else:
-                print("Usuario en uso, ingrese otro.")
+                print("Nombre inválido, por favor ingréselo nuevamente")
         else:
-            print("Usuario inválido, ingreselo nuevamente.")
+            break
 
-    bandera=0
-    while bandera==0:
-        print("-"*175)
-        print("Debe tener: entre 8 y 16 caracteres, al menos una letra mayúscula, al menos una letra minúscula y al menos un número.")    
-        contraseña = input("Ingrese su contraseña: ")
-        if validaciones.validar_contraseña(contraseña)==1:
-            print("Contraseña válida.")
-            bandera=1
-        else:
-            print("Contraseña inválida, ingrésela nuevamente.")
-    bandera=0
-    while bandera==0:
-        print("-"*175)
-        dni = input("Ingrese su DNI: ")
-        if validaciones.validar_dni(dni)==1:
-                dni = int(dni)
-                print("DNI válido.")
-                bandera=1        
-        else:
-            print("DNI inválido, por favor ingrese un DNI válido.")
-    
-    variaciones.agregar_usuarios(nombre,email,usuario,contraseña,dni)
-    print("Usted se ha registrado correctamente.")
 
 
 def logueo():
@@ -81,28 +110,37 @@ def logueo():
 
     while band == 0:
         print("-"*175)
-        usuario_logueo = input("Ingrese su usuario para iniciar sesión: ")
-        if variaciones.validar_usuario(usuario_logueo)==1:
-            band = 1  # Usuario encontrado
-            print("Usuario encontrado.")
+        print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+        print("Ingrese su usuario para iniciar sesión:")
+        usuario_logueo =crud_usuarios.interfaz_logueo()
+        if usuario_logueo != None:
+            if crud_usuarios.validar_usuario(usuario_logueo)==1:
+                band = 1  # Usuario encontrado
+                print("Usuario encontrado.")
+            else:
+                print("Datos inexistente, ingrese su usuario nuevamente.")
         else:
-            print("Datos inexistente, ingrese su usuario nuevamente.")
+            break
 
     if band == 1:
         while flag == 0:
             print("-"*175)
-            contraseña_logueo = input("Ingrese su contraseña: ")
-            if variaciones.validar_contraseña(contraseña_logueo)==1:
-                flag=1
+            print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+            print("Ingrese su contraseña:")
+            contraseña_logueo =crud_usuarios.interfaz_logueo()
+            if usuario_logueo != None:
+                if crud_usuarios.validar_contraseña(contraseña_logueo)==1:
+                    flag=1
+                    if crud_usuarios.tipo_de_usuario(usuario_logueo)==1:
+                        return 1
+                    else:
+                        return 0
+                else:
+                    flag =0
+                    print("Contraseña incorrecta.")
             else:
-                flag =0
-                print("Contraseña incorrecta.")
+                break
                 
-    if variaciones.tipo_de_usuario(usuario_logueo)==1:
-        return 1
-    else:
-        return 0
-
 
 def inicio_logueo():
 
@@ -123,25 +161,22 @@ def inicio_logueo():
                 if seleccion == 1:
                     registro()
                     f=1
-                    return seleccion,0
 
                 elif seleccion == 2:
                     f=1
                     tipo_de_usuario=logueo()
                     if tipo_de_usuario==0:
                         print("Sesión iniciada.")
-                        return seleccion, 0
+                        eventos.inicio()
                     
                     if tipo_de_usuario==1:
                         print("Sesión iniciada como gestor.")
-                    
-                        return seleccion, 1
+                        gestor.inicio()
                     
                 elif seleccion == 3:
                     f = 1  # Termina el bucle principal
                     print("Fin de la operación.")
-
-                    return seleccion, 0
+ 
 
         if f==0:
             print("Opción no encontrada.")
