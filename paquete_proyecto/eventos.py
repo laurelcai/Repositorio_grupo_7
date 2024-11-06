@@ -8,37 +8,37 @@ def inicio():#se desplieaga un menu para seleccionar los distintos tipos de even
     
     """Luego de haber iniciado sesion el usuario,
     Sale: El usuario elije que desea hacer y se devuelve un valor al respecto  """
-
-    band=0
-    while band==0: 
-
-        print("Tipos de eventos: ")
-        print("-"*175)
-        print('1)Música.')
-        print('2)Familia.')
-        print('3)Teatro.')
-        print('4)Deporte.')
-        print('0)Cuenta.'.center(10,' '),'-1)Salir.'.center(10,' '))
-        print("-"*175)    
+    
+    print("Tipos de eventos: ")
+    print("-"*175)
+    print('1)Música.')
+    print('2)Familia.')
+    print('3)Teatro.')
+    print('4)Deporte.')
+    print('0)Cuenta.'.center(10,' '),'-1)Salir.'.center(10,' '))
+    print("-"*175)    
         
-        elegir_inicio=input("Seleccione una opción: ")
-        if validaciones.validar(elegir_inicio)==1:
-            elegir_inicio=int(elegir_inicio)
+    try:
+        band=0
+        elegir_inicio=int(input("Seleccione una opción: "))
+        if elegir_inicio >0 and elegir_inicio<5: 
+            eventos(elegir_inicio)
+            band=1                
 
-            if elegir_inicio >0 and elegir_inicio<5: 
-                eventos(elegir_inicio)
-                band=1
+        if elegir_inicio==-1:
+            print("Adios.")
+            band=1                    
 
-            if elegir_inicio==-1:
-                print("Adios.")
-                band=1
-
-            if elegir_inicio==0:
-                gestion_cuenta()
-                band=1
-
+        if elegir_inicio==0:
+            gestion_cuenta()
+            band=1
+        
         if band==0:
-            print("Opción no encontrada.")
+            raise
+    
+    except:
+        print("Error, opcion no encontrada")
+        inicio()
        
 
 def eventos(elegir_inicio):#Se muestran los eventos filtrados segun lo seleccionado por el usuario
