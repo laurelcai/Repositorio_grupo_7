@@ -48,7 +48,7 @@ def inicio():
 def interfaz_gestor():
     bandera_interfaz=0
     while bandera_interfaz==0:
-        eleccion=input("")
+        eleccion=input("").upper()
         if eleccion=='0':
             inicio()
             bandera_interfaz=1

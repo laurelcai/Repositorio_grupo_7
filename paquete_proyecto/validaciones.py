@@ -38,39 +38,12 @@ def validar_usuario(usuario):#Expresion regular para validar el usuario ingrsado
     else:
         return 0
     
-def validar_tipo():
-    bandera_validacion_tipo=0
-    while bandera_validacion_tipo==0:
-        print('1)Música.')
-        print('2)Familia.')
-        print('3)Teatro.')
-        print('4)Deporte.')
-        tipo=input("Seleccione el tipo de evento: ")
-        if validar(tipo)==1:
-            tipo = int(tipo)
-            if tipo == 0:
-                return gestor.inicio()
-            if tipo == 1:
-                return 'MUSICA',1
-            if tipo ==2:
-                return 'FAMILIA',2
-            if tipo==3:
-                return 'TEATRO',3
-            if tipo==4:
-                return 'DEPORTE',4
-        else:
-            print("Tipo de evento inválido.")
-
-
 def validar_agregar_nombre_evento(nombre):
-    if nombre in ['0', '1']:
-        return 1
-    
-    if re.match(r"^[a-zA-Z][a-zA-Z0-9_ ]{1,14}[a-zA-Z0-9_]$", nombre):
-        return 1
+    patron = r"^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9'´-]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñ0-9'´-]+)*$"
+    if re.match(patron, nombre):
+        return True
     else:
-        return 0
-
+        return False
 
 def validar_agregar_fecha_evento(fecha):
     if fecha in ['0', '1']:

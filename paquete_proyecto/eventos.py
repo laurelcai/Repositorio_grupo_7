@@ -48,8 +48,9 @@ def eventos(elegir_inicio):#Se muestran los eventos filtrados segun lo seleccion
     bandera_eventos=0
     while bandera_eventos==0:
         print('-' * 175)
-        print(" "*3,f"{'TIPO':<20} {'NOMBRE':25} {'UBICACIÓN':<25} {'FECHA Y HORA':<20}")
+        print(" "*3,f"{'TIPO':<16} {'NOMBRE':22} {'UBICACIÓN':<22} {'FECHA Y HORA':<26}")
         print('-' * 175)
+        elegir_inicio=str(elegir_inicio)
 
         cantidad_de_eventos=crud_eventos.filtrar_eventos(elegir_inicio)
 

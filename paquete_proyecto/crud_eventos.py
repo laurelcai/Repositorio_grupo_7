@@ -2,6 +2,7 @@ import validaciones
 import eventos
 import crud_historial
 import gestor
+import ArchivosJson
 
 #lista donde se guardan los ids de los eventos elegidos para luego poder manipular con el evento con mayor facilidad
 lista_id=[]
@@ -11,10 +12,7 @@ lista_id=[]
 ubicaciones=[]
 
 #matriz con todos los datos de eventos necesarios
-diccionario_eventos={1:[[1001,"MUSICA","MILO J","ESTADIO DE MORÓN","25 DE OCTUBRE, 21 HS",("PLATEA" , "$35000"),("CAMPO" , "$28000")],[1002,"MUSICA","BUENOS AIRES TRAP","PARQUE DE LA CIUDAD","7 Y 8 DE DICIEMBRE",("ABONO POR UN DIA","$50000"),("ABONO GENERAL","$85000")]],
-                    2:[[2001,"FAMILIA","PLIM PLIM","QUALITY ESPACIO","5 DE OCTUBRE, 17.30HS",("CAMPO DELANTERO" , "$17000"),("CAMPO TRASERO" , "$11000")]],
-                    3:[],
-                    4:[[4001,"DEPORTE","ARGENTINA VS BOLIVIA","MAS MONUMENTAL","15 DE OCTUBRE, 21HS",("PLATEA",  "$120000"),("POPULAR" , "$75000")]]}
+diccionario_eventos= ArchivosJson.abrirJson()
 
 #Ordenamiento de matriz con criterio, alfabeticamente por artista/nombre
 #matriz_eventos = sorted(matriz_eventos_desordenada,key=lambda x: (x[2]))
@@ -30,8 +28,8 @@ def imprimir_eventos():
         matriz=diccionario_eventos[key]
         for id, tipo, nombre, ubicacion,fecha,entradas1,entradas2 in matriz:
             print('-' * 175)
-            entrada,precio=entradas1
-            entrada2,precio2=entradas2
+            entrada,precio,capacidad1,vendidos1=entradas1
+            entrada2,precio2,capacidad2,vendidos2=entradas2
             print(f"{id:<10}{tipo:<16} {nombre:<25} {ubicacion:<23}{fecha:<26}{entrada:<}:{precio}")
             print(f"{'':<102}{entrada2}:{precio2}")
 
@@ -63,7 +61,7 @@ def filtrar_eventos(elegir):
             for id, tipo, nombre, ubicacion,fecha,entradas1,entradas2 in matriz:
                 lista_id.append(id)
                 cont=cont+1
-                print(cont,")",f"{tipo:<16} {nombre:<22} {ubicacion:<22}{fecha:<26}")
+                print(cont,")",f"{tipo:<16} {nombre:<22} {ubicacion:<23}{fecha:<26}")
                 
             return len(matriz)
 
@@ -110,88 +108,6 @@ def borrar():
         else:
             band=1
 
-#Se solicitan por teclado los datos necesarios para asi poder agregar un evento mas a la matriz de eventos
-def agregar():
-    tipo,tipo_diccionario=validaciones.validar_tipo()
-    bandera_nombre= 0 # Bandera para controlar el bucle de validación del Nombre
-    while bandera_nombre == 0:
-        print("-"*175)
-        print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
-        print("Ingrese nombre del evento:")
-        nombre_del_evento = gestor.interfaz_gestor()
-        if nombre_del_evento != None:
-            if validaciones.validar_agregar_nombre_evento(nombre_del_evento) == 1:
-                print("Nombre válido.")
-                bandera_nombre = 1
-                bandera_ubicacion_evento=0
-                while bandera_ubicacion_evento == 0:
-                    print("-"*175)
-                    print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
-                    print("Ingrese la localidad/ubicacion del evento: ")
-                    ubicacion_evento = gestor.interfaz_gestor()
-                    if ubicacion_evento != None:
-                        if validaciones.validar_agregar_nombre_evento(ubicacion_evento) == 1:
-                            print("Ubicacioon válida.")
-                            bandera_ubicacion_evento = 1
-                            bandera_fecha=0
-                            while bandera_fecha == 0:
-                                print("-"*175)
-                                print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
-                                print("Ingrese la fecha y hora del evento")
-                                fecha = gestor.interfaz_gestor()
-                                if fecha != None:
-                                    if validaciones.validar_agregar_fecha_evento(fecha)==1:
-                                        print("Fecha válida.")
-                                        bandera_fecha = 1
-                                        bandera_entrada1=0
-                                        while bandera_entrada1== 0:
-                                            print("-"*175)  
-                                            print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
-                                            print("Ingrese la ubicacion del evento:")
-                                            entrada1 = gestor.interfaz_gestor()
-                                            if entrada1 != None:
-                                                if validaciones.validar_agregar_nombre_evento(entrada1)==1:
-                                                    print("Ubicacion valida")
-                                                    bandera_entrada1= 1
-                                                    bandera_entrada2=0
-                                                    while bandera_entrada2 == 0:
-                                                        print("-"*175)    
-                                                        print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
-                                                        print("Ingrese la ubicacion del envento y su precio: ")
-                                                        entrada2 = gestor.interfaz_gestor()
-                                                        if entrada2 != None:
-                                                            if validaciones.validar_agregar_nombre_evento(entrada2)==1:
-                                                                print("Ubicacion válida.")
-                                                                bandera_entrada2 = 1
-                                                                print("Usted se ha registrado correctamente.")
-                                                                for key in diccionario_eventos:
-                                                                   if key==tipo_diccionario:
-                                                                        matriz=diccionario_eventos[key] 
-                                                                        id=len(matriz)+1000*tipo_diccionario
-                                                                        matriz.append([id, tipo, nombre_del_evento, ubicacion_evento, fecha, entrada1, entrada2])
-                                                                gestor.inicio()
-                                                            else:
-                                                                print("Ubicacion inválida, por favor ingréselo nuevamente")
-                                                        else:
-                                                            break
-
-                                                else:
-                                                    print("Ubicacion inválida, por favor ingrésela nuevamente")
-                                            else:
-                                                break
-                                        
-                                else:
-                                    break
-
-                        else:
-                            print("Ubicacion inválida, por favor ingréselo nuevamente.")
-                    else:
-                        break
-            else:
-                print("Nombre inválido, por favor ingréselo nuevamente")
-        else:
-            break
-
 
 def interfaz_eventos():
     bandera_interfaz=0
@@ -214,3 +130,172 @@ def interfaz_eventos():
                 return eleccion
         else:
             return 0
+
+
+def solicitar_tipo_evento():
+    bandera_validacion_tipo=0
+    while bandera_validacion_tipo==0:
+        print("-"*175)
+        print('1)Música.')
+        print('2)Familia.')
+        print('3)Teatro.')
+        print('4)Deporte.')
+        tipo=input("Seleccione el tipo de evento: ")
+        if validaciones.validar(tipo)==1:
+            tipo = int(tipo)
+            if tipo == 0:
+                return gestor.inicio()
+            if tipo == 1:
+                return 'MUSICA',"1"
+            if tipo ==2:
+                return 'FAMILIA',"2"
+            if tipo==3:
+                return 'TEATRO',"3"
+            if tipo==4:
+                return 'DEPORTE',"4"
+        if bandera_validacion_tipo==0:
+            print("Tipo de evento inválido.")
+
+
+def solicitar_nombre_evento():
+    bandera_nombre=0
+    while bandera_nombre == 0:
+        print("-"*175)
+        print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+        print("Ingrese nombre del evento:")
+        nombre_del_evento = gestor.interfaz_gestor()
+        if nombre_del_evento != None:
+            if validaciones.validar_agregar_nombre_evento(nombre_del_evento) == 1:
+                print("Nombre válido.")
+                bandera_nombre = 1
+                return nombre_del_evento
+        else:
+            break
+        if bandera_nombre ==0:
+            print("Nombre inválido, por favor ingréselo nuevamente")
+
+
+def solicitar_ubicacion_evento():
+    bandera_ubicacion_evento=0
+    while bandera_ubicacion_evento == 0:
+        print("-"*175)
+        print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+        print("Ingrese la localidad/ubicacion del evento: ")
+        ubicacion_evento = gestor.interfaz_gestor()
+        if ubicacion_evento != None:
+            if validaciones.validar_agregar_nombre_evento(ubicacion_evento) == 1:
+                print("Ubicacion válida.")
+                bandera_ubicacion_evento = 1
+                return ubicacion_evento
+        else:
+            break
+        if bandera_ubicacion_evento ==0:
+            print("Ubicacion inválida, por favor ingréselo nuevamente.")
+             
+
+def solicitar_fecha_hora():
+    bandera_fecha=0
+    while bandera_fecha == 0:
+        print("-"*175)
+        print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+        print("Ingrese la fecha y hora del evento")
+        fecha = gestor.interfaz_gestor()
+        if fecha != None:
+            if validaciones.validar(fecha)==0:
+                print("Fecha válida.")
+                bandera_fecha = 1
+                return fecha
+        else:
+            break
+        if bandera_fecha==0:
+            print("Fecha inválida, por favor ingrésela nuevamente.")
+
+
+def solicitar_entrada():
+    bandera_entrada=0
+    while bandera_entrada== 0:
+        print("-"*175)
+        print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+        print("Ingrese la entrada del evento:")
+        entrada = gestor.interfaz_gestor()
+        if entrada != None:
+            if validaciones.validar_agregar_nombre_evento(entrada)==1:
+                print("Entrada valida")
+                bandera_entrada= 1
+                return entrada
+        else:
+            break
+        if bandera_entrada==0:
+            print("Entrada inválida, por favor ingrésela nuevamente.")
+
+
+def solicitar_precio_entrada():
+    bandera_precio_entrada=0
+    while bandera_precio_entrada== 0:
+        print("-"*175)
+        print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+        print("Ingrese el precio de la entrada:")
+        precio_entrada = gestor.interfaz_gestor()
+        if precio_entrada != None:
+            if validaciones.validar(precio_entrada)==1:
+                print("Precio de la entrada valido")
+                bandera_precio_entrada= 1
+                return precio_entrada
+        else:
+            break
+        if bandera_precio_entrada==0:
+            print("Precio inválido, por favor ingréselo nuevamente.")
+
+
+def solicitar_aforo_maximo():
+    bandera_aforo_entrada=0
+    while bandera_aforo_entrada== 0:
+        print("-"*175)
+        print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+        print("Ingrese el aforo maximo de la entrada:")
+        aforo_entrada = gestor.interfaz_gestor()
+        if aforo_entrada != None:
+            if validaciones.validar(aforo_entrada)==1:
+                print("Aforo maximo, de la entrada valido")
+                bandera_aforo_entrada= 1
+                return aforo_entrada
+        else:
+            break
+        if bandera_aforo_entrada==0:
+            print("Aforo inválido, por favor ingréselo nuevamente.")
+
+
+# Función principal para ingresar todos los datos del evento
+def agregar():
+    entrada1=[]
+    entrada2=[]
+    tipo_evento,numero_evento= solicitar_tipo_evento()
+    if tipo_evento !=None:
+        nombre_evento = solicitar_nombre_evento()
+        if nombre_evento !=None:
+            ubicacion_evento = solicitar_ubicacion_evento()
+            if ubicacion_evento !=None:
+                fecha_hora_evento = solicitar_fecha_hora()
+                if fecha_hora_evento !=None:
+                    tipo_entrada1 = solicitar_entrada()
+                    if tipo_entrada1 !=None:
+                        valor_entrada1 = solicitar_precio_entrada()
+                        if valor_entrada1 !=None:
+                            aforo_maximo1 = solicitar_aforo_maximo()
+                            if aforo_maximo1 != None:
+                                tipo_entrada2 = solicitar_entrada()
+                                if tipo_entrada2 !=None:
+                                    valor_entrada2 = solicitar_precio_entrada()
+                                    if valor_entrada2 !=None:
+                                        aforo_maximo2 = solicitar_aforo_maximo()
+                                        if aforo_maximo2 != None:
+                                            for key in diccionario_eventos:
+                                                if key==numero_evento:
+                                                    matriz=diccionario_eventos[key]
+                                                    numero_evento=int(numero_evento) 
+                                                    id=len(matriz)+1000*numero_evento
+                                                    entrada1.extend([tipo_entrada1,valor_entrada1,aforo_maximo1,0])
+                                                    entrada2.extend([tipo_entrada2,valor_entrada2,aforo_maximo2,0])
+                                                    matriz.append([id, tipo_evento, nombre_evento, ubicacion_evento, fecha_hora_evento, entrada1, entrada2])
+                                                    
+

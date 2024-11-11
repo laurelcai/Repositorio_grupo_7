@@ -100,7 +100,6 @@ def registro():
             break
 
 
-
 def logueo():
     flag = 0  # Bandera para controlar el bucle de validación de la contraseña
     band = 0  # Bandera para controlar la búsqueda del usuario
