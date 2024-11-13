@@ -17,8 +17,9 @@ def inicio():
         print('1)Imprimir matriz eventos.')
         print('2)Imprimir matriz usuarios.')
         print('3)Imprimir matriz historial.')
-        print('4)Agregar evento.')
-        print('5)Borrar evento.')
+        print('4)Imprimir historial por usuario')
+        print('5)Agregar evento.')
+        print('6)Borrar evento.')
         print("-"*175)
         print('0)Cuenta.'.center(10,' '),'-1)Salir.'.center(10,' '))
 
@@ -32,8 +33,10 @@ def inicio():
         if eleccion==3:
             crud_historial.imprimir_historial()
         if eleccion==4:
-            crud_eventos.agregar()
+            crud_historial.imprimir_historial_por_usuario()
         if eleccion==5:
+            crud_eventos.agregar()
+        if eleccion==6:
             crud_eventos.borrar()
             
         if eleccion==0:

@@ -1,5 +1,5 @@
 import re
-import gestor
+
 def validar(entrada):#valida que la entrada no sea simplemente numero
     if re.match(r"^-?\d+$",entrada):
         return 1

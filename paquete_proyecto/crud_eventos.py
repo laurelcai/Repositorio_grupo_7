@@ -19,38 +19,65 @@ diccionario_eventos= ArchivosJson.abrirJson()
 
 #Se encarga de imprimir de manera ordenada y prolija la matriz de eventos
 def imprimir_eventos():
-
     print('-' * 175)
-    print(f"{'ID':<10}{'TIPO':<16} {'NOMBRE':25} {'UBICACIÓN':<22} {'FECHA Y HORA':<26}{'ENTRADAS DISPONIBLES':<25}")
-
+    print(f"{'ID':<10}{'TIPO':<16} {'NOMBRE':25} {'UBICACIÓN':<22} {'FECHA Y HORA':<26}{'ENTRADAS DISPONIBLES':<41}{'AFORO MAXIMO':<20}{'AFORO VENDIDO':<20}")
 
     for key in diccionario_eventos:
-        matriz=diccionario_eventos[key]
-        for id, tipo, nombre, ubicacion,fecha,entradas1,entradas2 in matriz:
+        matriz = diccionario_eventos[key]
+        for id, tipo, nombre, ubicacion, fecha, entradas1, entradas2 in matriz:
+            # Primera línea de impresión (entrada1)
+            entrada1, precio1, capacidad1, vendidos1 = entradas1
             print('-' * 175)
-            entrada,precio,capacidad1,vendidos1=entradas1
-            entrada2,precio2,capacidad2,vendidos2=entradas2
-            print(f"{id:<10}{tipo:<16} {nombre:<25} {ubicacion:<23}{fecha:<26}{entrada:<}:{precio}")
-            print(f"{'':<102}{entrada2}:{precio2}")
+            print(f"{id:<10}{tipo:<16} {nombre:<25} {ubicacion:<23}{fecha:<26}{entrada1:<20}:{precio1:<20}{capacidad1:<20}{vendidos1:<10}")
+            entrada2, precio2, capacidad2, vendidos2 = entradas2
+            print(f"{'':<102}{entrada2:<20}:{precio2:<20}{capacidad2:<20}{vendidos2:<20}")
 
 
-def filtrar_precios_eventos(evento_elegido,tipo_evento):
-    filtrados=[]
-    matriz=[]
+
+def filtrar_precios_eventos(evento_elegido, tipo_evento):
+    filtrados = []
+    matriz = []
+    
     """Entrada: recibe por teclado una eleccion
     Salida: se filtra e imprime la matriz segun lo elegido"""
-    
+    id_evento = lista_id[evento_elegido - 1]  # Obtener el id del evento seleccionado
     for key in diccionario_eventos:
-        if key == tipo_evento:
-            matriz=diccionario_eventos[key]    
-            filtrados = [fila for fila in matriz if fila[0] == lista_id[evento_elegido-1]]
+        if key == tipo_evento:  # Verificar si el tipo de evento coincide
+            matriz = diccionario_eventos[key]  # Obtener la matriz correspondiente al tipo de evento
+            filtrados = [fila for fila in matriz if fila[0] == id_evento]  # Filtrar por id_evento
+
             for id, tipo, nombre, ubicacion, fecha, entradas1, entradas2 in filtrados:
-                crud_historial.agregar_evento(id,nombre)
-                print(1,")",entradas1[0],":",entradas1[1])
-                print(2,")",entradas2[0],":",entradas2[1])
-            
-            return (entradas1,entradas2)
+                entrada1, precio1, capacidad1, vendidos1 = entradas1
+                entrada2, precio2, capacidad2, vendidos2 = entradas2
+                crud_historial.agregar_evento(id, nombre)  # Agregar al historial
+
+                # Calcular y mostrar los porcentajes y precios para las entradas 1 y 2
+                porcentaje1 = porcentaje_asistencia(capacidad1,vendidos1)
                 
+                if porcentaje1 < 100:
+                    print(f"1) {entrada1}: {precio1} (vendido:",porcentaje1,"%)")
+                else:
+                    print(f"1) {entrada1}: sold out")
+
+                porcentaje2 = porcentaje_asistencia(capacidad2,vendidos2)
+                
+                if porcentaje2 < 100:
+                    print(f"2) {entrada2}: {precio2} (vendido:",porcentaje2,"%)")
+                else:
+                    print(f"2) {entrada2}: sold out")
+                
+                if porcentaje1 <100 and porcentaje2 <100:
+                    return (entrada1,entrada2), id_evento,(capacidad1,capacidad2)
+                if porcentaje1 < 100 and porcentaje2 >=100:
+                    return (entrada1,0),id_evento,(capacidad1,capacidad2)
+                if porcentaje1 >=100 and porcentaje2<100:
+                    return (0,entrada2),id_evento,(capacidad1,capacidad2)
+                if porcentaje2>=100 and porcentaje1 >=100:
+                    return None,None,None
+
+                
+            
+
 
 def filtrar_eventos(elegir):
     lista_id.clear()        
@@ -127,8 +154,10 @@ def interfaz_eventos():
                 bandera_interfaz=1
             
             if bandera_interfaz==0:
+                bandera_interfaz=1
                 return eleccion
         else:
+            bandera_interfaz=1
             return 0
 
 
@@ -294,8 +323,23 @@ def agregar():
                                                     matriz=diccionario_eventos[key]
                                                     numero_evento=int(numero_evento) 
                                                     id=len(matriz)+1000*numero_evento
-                                                    entrada1.extend([tipo_entrada1,valor_entrada1,aforo_maximo1,0])
-                                                    entrada2.extend([tipo_entrada2,valor_entrada2,aforo_maximo2,0])
+                                                    entrada1.extend([tipo_entrada1,valor_entrada1,int(aforo_maximo1),0])
+                                                    entrada2.extend([tipo_entrada2,valor_entrada2,int(aforo_maximo2),0])
                                                     matriz.append([id, tipo_evento, nombre_evento, ubicacion_evento, fecha_hora_evento, entrada1, entrada2])
                                                     
+
+def agregar_asistencia(id_evento,tipo_evento,ubicacion,cantidad_compradas):
+    for key in diccionario_eventos:
+        if key == tipo_evento:
+            matriz=diccionario_eventos[key]
+            for fila in matriz:
+                if fila[0]==id_evento:
+                    entradas=fila[4+ubicacion]
+                    entradas[3]=entradas[3]+cantidad_compradas
+
+def porcentaje_asistencia(aforo,entradas_vendidas):
+    porcentaje=entradas_vendidas*100/aforo
+    return porcentaje
+
+
 

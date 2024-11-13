@@ -1,5 +1,6 @@
 import validaciones
 import load_upload
+import gestor
 #matriz con todos los datos de cada compra ralizada
 historial=load_upload.cargar_historial()
 
@@ -14,7 +15,7 @@ def agregar_historial(cantidad,ubicacion):
 
     while len(lista_historial) < 6:
         lista_historial.append(None)
-    
+
     # Asignar valores a los índices específicos
     lista_historial[4] = ubicacion
     lista_historial[5] = cantidad
@@ -57,3 +58,22 @@ def borrar():
                 band=1
         if band==0:
             print("Opción incorrecta.")
+
+def imprimir_historial_por_usuario():
+    bandera_buscar_usuario=0
+    while bandera_buscar_usuario==0:
+        print("0)Inicio")
+        usuario=input("Ingrese el usuario del cual desea buscar su historial:")
+        if usuario == "0":
+            bandera_buscar_usuario=1
+        else:
+            if validaciones.validar(usuario)==0:
+                filtrados = [fila for fila in historial if fila[1] == usuario]
+                if len(filtrados)>0:
+                    bandera_buscar_usuario=1
+                    print(f"{'ID USUARIO':<15}{'USUARIO':<20}{'ID EVENTO':<15}{'EVENTO':<25}{'UBICACIÓN':<30}{'CANTIDAD ENTRADAS COMPRADAS':<10}")
+                    print('-'*175)
+                    for id_usuario,usuario,id_evento,evento,ubicacion,cantidad in filtrados:
+                        print(f"{id_usuario:<15}{usuario:<20}{id_evento:<15}{evento:<25}{ubicacion:<30}{cantidad:<10}")
+                if bandera_buscar_usuario==0:
+                    print("Usuario no encontrado.")

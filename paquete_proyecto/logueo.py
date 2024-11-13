@@ -127,7 +127,7 @@ def logueo():
             print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
             print("Ingrese su contraseña:")
             contraseña_logueo =crud_usuarios.interfaz_logueo()
-            if usuario_logueo != None:
+            if contraseña_logueo != None:
                 if crud_usuarios.validar_contraseña(contraseña_logueo)==1:
                     flag=1
                     if crud_usuarios.tipo_de_usuario(usuario_logueo)==1:
@@ -135,8 +135,18 @@ def logueo():
                     else:
                         return 0
                 else:
-                    flag =0
-                    print("Contraseña incorrecta.")
+                    intentos=crud_usuarios.intentos_contraseña()
+                    if intentos ==0:
+                        flag=1
+                        if crud_usuarios.tipo_de_usuario(usuario_logueo)==1:
+                            return 1
+                        else:
+                            return 0
+                    if intentos==1 :
+                        flag=1
+                        inicio_logueo()
+                    if intentos ==2:
+                        break
             else:
                 break
                 

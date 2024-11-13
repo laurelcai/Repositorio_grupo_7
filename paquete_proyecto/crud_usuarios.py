@@ -102,3 +102,27 @@ def interfaz_logueo():
             bandera_interfaz=1
         if bandera_interfaz==0:
             return eleccion
+
+
+def intentos_contraseña(contador_intentos=0):
+    """Función recursiva que solicita una contraseña hasta un máximo de 4 intentos."""
+    
+    if contador_intentos >= 4:  # Caso base: si ya se han hecho 4 intentos
+        print("Su cuenta fue bloqueada por exceso de intentos.Intente más tarde.")
+        return 1
+
+    # Solicitar la contraseña al usuario
+    print('0)Inicio.'.center(10,' '),'-1)Salir.'.center(10,' '))
+    print(f"Contraseña incorrecta, ingresela de nuevo. Le quedan {4 - contador_intentos} intentos: ")
+    intentos_de_contra = interfaz_logueo()
+    if intentos_de_contra != None:
+        # Validar la contraseña
+        if validar_contraseña(intentos_de_contra) == 1:
+            print("Contraseña correcta.")
+            return 0
+        else:
+            # Incrementar el contador y llamar de nuevo a la función recursivamente
+            return intentos_contraseña(contador_intentos + 1)
+    else:
+        return 2
+

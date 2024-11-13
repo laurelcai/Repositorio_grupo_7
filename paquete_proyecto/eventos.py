@@ -17,9 +17,9 @@ def inicio():#se desplieaga un menu para seleccionar los distintos tipos de even
     print('4)Deporte.')
     print('0)Cuenta.'.center(10,' '),'-1)Salir.'.center(10,' '))
     print("-"*175)    
+    band=0    
+    while band==0:
         
-    try:
-        band=0
         elegir_inicio=int(input("Seleccione una opción: "))
         if elegir_inicio >0 and elegir_inicio<5: 
             eventos(elegir_inicio)
@@ -36,10 +36,7 @@ def inicio():#se desplieaga un menu para seleccionar los distintos tipos de even
         if band==0:
             raise
     
-    except:
-        print("Error, opcion no encontrada")
-        inicio()
-       
+
 
 def eventos(elegir_inicio):#Se muestran los eventos filtrados segun lo seleccionado por el usuario
 
@@ -78,26 +75,34 @@ def comprar(evento_elegido,tipo_evento):
         print(" "*3,f"{'UBICACIÓN Y PRECIO':<10}")
         print('-' * 175)
 
-        ubicacion=crud_eventos.filtrar_precios_eventos(evento_elegido,tipo_evento)
+        ubicacion,id_evento,capacidad=crud_eventos.filtrar_precios_eventos(evento_elegido,tipo_evento)
         elegir_ubicacion=crud_eventos.interfaz_eventos()
-        if elegir_ubicacion != None:
-            if elegir_ubicacion >0 and elegir_ubicacion <= 2:
-                bandera_comprar=1
-                band=0
-                while band==0:
-                    elegir_cantidad_entradas=input("Cuántas entradas desea comprar? ")
-                    if validaciones.validar(elegir_cantidad_entradas)==1 and elegir_cantidad_entradas > '0':
-                        print("Usted ha comprado",elegir_cantidad_entradas,"entradas en la ubicación",ubicacion[elegir_ubicacion-1][0])
-                        crud_historial.agregar_historial(elegir_cantidad_entradas,ubicacion[elegir_ubicacion-1])
-                        inicio()
-                        band=1
+        if ubicacion != None and id_evento != None:
+            if elegir_ubicacion != None:
+                if elegir_ubicacion >0 and elegir_ubicacion <= 2:
+                    if ubicacion[elegir_ubicacion-1]!=0:
+                        bandera_comprar=1
+                        band=0
+                        while band==0:
+                            elegir_cantidad_entradas=input("Cuántas entradas desea comprar? ")
+                            if validaciones.validar(elegir_cantidad_entradas)==1:
+                                elegir_cantidad_entradas=int(elegir_cantidad_entradas)
+                                if elegir_cantidad_entradas > 0 and elegir_cantidad_entradas <= capacidad[elegir_ubicacion-1]:
+                                    print("Usted ha comprado",elegir_cantidad_entradas,"entradas en la ubicación",ubicacion[elegir_ubicacion-1])
+                                    crud_historial.agregar_historial(elegir_cantidad_entradas,ubicacion[elegir_ubicacion-1])
+                                    crud_eventos.agregar_asistencia(id_evento,tipo_evento,elegir_ubicacion,elegir_cantidad_entradas)
+                                    inicio()
+                                    band=1
+                                else:
+                                    print("Se ha excedido de la cantidad de entradas disponibles, intente de nuevo.")
+                            else:
+                                print("Opción incorrecta.")
                     else:
-                        print("Opción incorrecta.")
-                
-            if bandera_comprar==0:
-                print("Opción no encontrada.")
-        else:
-            break
+                        print("No hay entradas disponibles para el evento seleccionado.")  
+                else:
+                    print("Opción no encontrada.")
+            else:
+                break
 
 
 def gestion_cuenta():
